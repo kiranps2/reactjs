@@ -1,9 +1,9 @@
 import React from "react";
 
-function LightSwitch({ isOn, onToggle }) {
+function LightSwitch(props) {
   return (
-    <button onClick={onToggle}>
-      {isOn ? "Turn OFF" : "Turn ON"}
+    <button onClick={props.onToggle}>
+      {props.isOn ? "Turn OFF" : "Turn ON"}
     </button>
   );
 }
