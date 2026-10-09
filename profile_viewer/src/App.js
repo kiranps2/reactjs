@@ -20,7 +20,6 @@ function App() {
     <div className="App">
       <h1>Welcome,{user} !</h1>
       <button onClick={handleClick}>Login as Alice</button>
-      <h3 id='wel'></h3>
     </div>
   );
 }
