@@ -15,11 +15,15 @@ function App() {
 
    const handleClick = () => {
     setUser("alice")
+    document.getElementById("hell").innerHTML="hello "+user;
   };
   return (
     <div className="App">
       <h1>Welcome,{user} !</h1>
-      <button onClick={handleClick}>Login as Alice</button>
+      <button onClick={handleClick}>Login as Alice
+      
+      </button>
+      <p id="hell"></p>
     </div>
   );
 }
