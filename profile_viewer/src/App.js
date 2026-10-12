@@ -23,7 +23,7 @@ function App() {
       <button onClick={handleClick}>Login as Alice
       
       </button>
-      <p id="hell"></p>
+     <p>Hello, {user}</p>
     </div>
   );
 }
