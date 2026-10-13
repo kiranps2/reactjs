@@ -214,7 +214,6 @@ function App() {
       <tr key={item.id}>
         <td>{item.id}</td>
 
-        {/* Book Name */}
         <td>
           {editingItemId === item.id ? (
             <input
@@ -233,7 +232,6 @@ function App() {
           )}
         </td>
 
-        {/* Author Name */}
         <td>
           {editingItemId === item.id ? (
             <input
@@ -252,7 +250,6 @@ function App() {
           )}
         </td>
 
-        {/* Publish Date */}
         <td>
           {editingItemId === item.id ? (
             <input
