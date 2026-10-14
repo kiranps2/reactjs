@@ -36,7 +36,6 @@ function App() {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Add a new book
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -61,12 +60,10 @@ function App() {
     setPublishDate("");
   };
 
-  // Delete a book
   const handleDeleteItem = (itemId) => {
     setItems(items.filter((item) => item.id !== itemId));
   };
 
-  // Start editing a book
   const handleEditItem = (item) => {
     setEditingItemId(item.id);
 
@@ -77,7 +74,6 @@ function App() {
     });
   };
 
-  // Save edited book details
   const handleSaveItem = () => {
     if (
       !editedBook.bookName.trim() ||
@@ -105,7 +101,6 @@ function App() {
     setEditingItemId(null);
   };
 
-  // Cancel editing
   const handleCancelEdit = () => {
     setEditingItemId(null);
 
@@ -116,7 +111,6 @@ function App() {
     });
   };
 
-  // Search books by title or author
   const filteredItems = items.filter(
     (item) =>
       item.bookName.toLowerCase().includes(searchTerm.toLowerCase()) ||
