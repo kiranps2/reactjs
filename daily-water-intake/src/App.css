@@ -1,0 +1,36 @@
+
+body {
+  background-color: #f4f8f6;
+  font-family: Arial, sans-serif;
+}
+
+.auth-card {
+  max-width: 450px;
+  border: none;
+  border-radius: 12px;
+}
+
+.form-card {
+  max-width: 550px;
+  border: none;
+  border-radius: 12px;
+}
+
+.card {
+  border-radius: 12px;
+}
+
+.form-control {
+  padding: 10px;
+}
+
+.btn {
+  border-radius: 6px;
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
