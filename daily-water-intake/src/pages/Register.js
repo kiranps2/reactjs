@@ -12,12 +12,10 @@ function Register() {
   function handleRegister(e) {
     e.preventDefault();
 
-    // Get existing users from Local Storage
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
     const cleanEmail = email.trim().toLowerCase();
 
-    // Check whether the email already exists
     const userExists = users.some(
       (user) => user.email === cleanEmail
     );
@@ -32,7 +30,6 @@ function Register() {
       return;
     }
 
-    // Create the new user
     const newUser = {
       id: Date.now().toString(),
       name: name.trim(),
@@ -40,7 +37,6 @@ function Register() {
       password: password,
     };
 
-    // Save the new user
     users.push(newUser);
 
     localStorage.setItem("users", JSON.stringify(users));
