@@ -3,14 +3,10 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { Dashboard } from "./App";
+import EditPage from "./pages/EditPage";
+import ComparePage from "./pages/ComparePage";
 
-import {
-  Dashboard,
-  EditPage,
-  ComparePage,
-} from "./App";
-
-// Protect pages that require login
 function PrivateRoute({ children }) {
   const currentUser = JSON.parse(
     localStorage.getItem("currentUser") || "null"
@@ -22,13 +18,10 @@ function PrivateRoute({ children }) {
 function AppRouter() {
   return (
     <Routes>
-      {/* Login page */}
       <Route path="/login" element={<Login />} />
 
-      {/* Registration page */}
       <Route path="/register" element={<Register />} />
 
-      {/* Dashboard */}
       <Route
         path="/dashboard"
         element={
@@ -38,7 +31,6 @@ function AppRouter() {
         }
       />
 
-      {/* Edit water intake */}
       <Route
         path="/edit/:id"
         element={
@@ -48,7 +40,6 @@ function AppRouter() {
         }
       />
 
-      {/* Compare water intake */}
       <Route
         path="/compare"
         element={
@@ -58,13 +49,11 @@ function AppRouter() {
         }
       />
 
-      {/* Default route */}
       <Route
         path="/"
         element={<Navigate to="/dashboard" replace />}
       />
 
-      {/* Unknown routes */}
       <Route
         path="*"
         element={<Navigate to="/dashboard" replace />}
