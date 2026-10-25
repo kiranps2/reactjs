@@ -1,32 +1,32 @@
 
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import WaterForm from "./components/WaterForm";
 
 // Dashboard page
 export function Dashboard() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("currentUser") || "null");
 
-  const [waterList, setWaterList] = useState(() => {
-    return JSON.parse(localStorage.getItem("waterList") || "[]");
-  });
+  const [waterList, setWaterList] = useState(() =>
+    JSON.parse(localStorage.getItem("waterList") || "[]")
+  );
 
-  const [quantity, setQuantity] = useState("");
   const [date1, setDate1] = useState("");
   const [date2, setDate2] = useState("");
   const [page, setPage] = useState(1);
 
+  // Save records to Local Storage
   useEffect(() => {
     localStorage.setItem("waterList", JSON.stringify(waterList));
   }, [waterList]);
 
   function getToday() {
     const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
 
-    return `${year}-${month}-${day}`;
+    return `${today.getFullYear()}-${String(
+      today.getMonth() + 1
+    ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   }
 
   function getTime() {
@@ -36,24 +36,20 @@ export function Dashboard() {
     });
   }
 
-  // Show only the logged-in user's records
+  // Get records belonging to the logged-in user
   const myRecords = user
     ? waterList.filter((item) => item.userId === user.id)
     : [];
 
-  function addWater(e) {
-    e.preventDefault();
-
-    const amount = Number(quantity);
-
-    if (!Number.isFinite(amount) || amount <= 0) {
-      alert("Enter a valid water quantity.");
-      return;
-    }
-
+  // Add water intake from WaterForm
+  function addWater(amount) {
     const today = getToday();
 
-    if (myRecords.some((item) => item.date === today)) {
+    const alreadyAdded = myRecords.some(
+      (item) => item.date === today
+    );
+
+    if (alreadyAdded) {
       alert("You have already added water intake today!");
       return;
     }
@@ -67,11 +63,12 @@ export function Dashboard() {
     };
 
     setWaterList((previous) => [...previous, newRecord]);
-    setQuantity("");
     setPage(1);
+
     alert("Water intake saved!");
   }
 
+  // Delete a record
   function deleteWater(id) {
     if (!window.confirm("Delete this water intake record?")) {
       return;
@@ -84,11 +81,13 @@ export function Dashboard() {
     );
   }
 
+  // Logout
   function logout() {
     localStorage.removeItem("currentUser");
     navigate("/login", { replace: true });
   }
 
+  // Compare two dates
   function compareDates(e) {
     e.preventDefault();
 
@@ -105,15 +104,18 @@ export function Dashboard() {
     navigate(`/compare?first=${date1}&second=${date2}`);
   }
 
+  // Sort newest records first
   const sortedRecords = [...myRecords].sort((a, b) =>
     b.date.localeCompare(a.date)
   );
 
+  // Pagination: five records per page
   const recordsPerPage = 5;
   const totalPages = Math.max(
     1,
     Math.ceil(sortedRecords.length / recordsPerPage)
   );
+
   const currentPage = Math.min(page, totalPages);
 
   const visibleRecords = sortedRecords.slice(
@@ -145,6 +147,7 @@ export function Dashboard() {
           Welcome, {user?.name || "User"}!
         </h2>
 
+        {/* Intake summary */}
         <div className="row g-3 my-3">
           <div className="col-md-6">
             <div className="card shadow-sm">
@@ -165,37 +168,14 @@ export function Dashboard() {
           </div>
         </div>
 
-        <div className="card shadow-sm mb-4">
-          <div className="card-body">
-            <h4>Add Water Intake</h4>
+        {/* Separate water form component */}
+        <WaterForm
+          onSave={addWater}
+          today={getToday()}
+          time={getTime()}
+        />
 
-            <form onSubmit={addWater}>
-              <label className="form-label">
-                Quantity in millilitres
-              </label>
-
-              <input
-                type="number"
-                className="form-control mb-3"
-                min="1"
-                step="1"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-                placeholder="Example: 2500"
-                required
-              />
-
-              <p className="text-muted">
-                Date: {getToday()} | Time: {getTime()}
-              </p>
-
-              <button className="btn btn-success">
-                Save Intake
-              </button>
-            </form>
-          </div>
-        </div>
-
+        {/* Water intake history */}
         <h4 className="mb-3">Water Intake History</h4>
 
         <div className="table-responsive">
@@ -225,7 +205,9 @@ export function Dashboard() {
                     <td>
                       <button
                         className="btn btn-primary btn-sm me-2"
-                        onClick={() => navigate(`/edit/${record.id}`)}
+                        onClick={() =>
+                          navigate(`/edit/${record.id}`)
+                        }
                       >
                         Edit
                       </button>
@@ -244,6 +226,7 @@ export function Dashboard() {
           </table>
         </div>
 
+        {/* Pagination */}
         <div className="d-flex gap-3 align-items-center mb-5">
           <button
             className="btn btn-outline-success"
@@ -266,7 +249,8 @@ export function Dashboard() {
           </button>
         </div>
 
-        <div className="card shadow-sm">
+        {/* Compare dates */}
+        <div className="card shadow-sm mb-4">
           <div className="card-body">
             <h4>Compare Two Dates</h4>
 
@@ -306,6 +290,7 @@ export function Dashboard() {
 export function EditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const user = JSON.parse(localStorage.getItem("currentUser") || "null");
 
   const [waterList, setWaterList] = useState(() =>
@@ -319,10 +304,12 @@ export function EditPage() {
   const [quantity, setQuantity] = useState(
     record ? String(record.quantity) : ""
   );
+
   const [date, setDate] = useState(record?.date || "");
 
   function getToday() {
     const today = new Date();
+
     return `${today.getFullYear()}-${String(
       today.getMonth() + 1
     ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
@@ -381,7 +368,10 @@ export function EditPage() {
 
   return (
     <div className="container py-5">
-      <div className="card shadow-sm mx-auto" style={{ maxWidth: "500px" }}>
+      <div
+        className="card shadow-sm mx-auto"
+        style={{ maxWidth: "500px" }}
+      >
         <div className="card-body">
           <h3>Edit Water Intake</h3>
 
@@ -389,6 +379,7 @@ export function EditPage() {
             <label className="form-label mt-3">
               Quantity (ml)
             </label>
+
             <input
               type="number"
               min="1"
@@ -400,6 +391,7 @@ export function EditPage() {
             />
 
             <label className="form-label mt-3">Date</label>
+
             <input
               type="date"
               className="form-control"
@@ -430,16 +422,18 @@ export function EditPage() {
 // Compare two dates page
 export function ComparePage() {
   const user = JSON.parse(localStorage.getItem("currentUser") || "null");
-  const query = new URLSearchParams(window.location.search);
 
+  const query = new URLSearchParams(window.location.search);
   const firstDate = query.get("first");
   const secondDate = query.get("second");
+
   const waterList = JSON.parse(localStorage.getItem("waterList") || "[]");
 
   function getIntake(date) {
     const record = waterList.find(
       (item) => item.userId === user?.id && item.date === date
     );
+
     return record ? record.quantity : 0;
   }
 
@@ -449,13 +443,17 @@ export function ComparePage() {
 
   return (
     <div className="container py-5">
-      <div className="card shadow-sm mx-auto" style={{ maxWidth: "500px" }}>
+      <div
+        className="card shadow-sm mx-auto"
+        style={{ maxWidth: "500px" }}
+      >
         <div className="card-body">
           <h3 className="text-success">Comparison Result</h3>
 
           <p>
             {firstDate}: {firstAmount} ml
           </p>
+
           <p>
             {secondDate}: {secondAmount} ml
           </p>
