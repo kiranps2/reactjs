@@ -31,6 +31,7 @@ function ComparePage() {
       alert("Future dates cannot be compared.");
       return;
     }
+    
 
     const waterList = JSON.parse(
       localStorage.getItem("waterList") || "[]"
@@ -41,9 +42,9 @@ function ComparePage() {
     );
 
     function getIntake(date) {
-      const record = myRecords.find((item) => item.date === date);
-      return record ? Number(record.quantity) : 0;
-    }
+  const record = myRecords.find((item) => item.date === date);
+  return record ? Number(record.quantity) : null;
+}
 
     const firstAmount = getIntake(firstDate);
     const secondAmount = getIntake(secondDate);
@@ -97,20 +98,32 @@ function ComparePage() {
           </form>
 
           {result && (
-            <div className="mt-4">
-              <hr />
-              <h4>Comparison Result</h4>
+        <div className="mt-4">
+          <hr />
+          <h4>Comparison Result</h4>
 
-              <p>
-                <strong>{result.firstDate}:</strong>{" "}
-                {result.firstAmount} ml
-              </p>
+          <p>
+            <strong>{result.firstDate}:</strong>{" "}
+            {result.firstAmount === null
+              ? "You didn't record any water intake on this day."
+              : `${result.firstAmount} ml`}
+          </p>
 
-              <p>
-                <strong>{result.secondDate}:</strong>{" "}
-                {result.secondAmount} ml
-              </p>
+          <p>
+            <strong>{result.secondDate}:</strong>{" "}
+            {result.secondAmount === null
+              ? "You didn't record any water intake on this day."
+              : `${result.secondAmount} ml`}
+          </p>
 
+          {result.firstAmount === null ||
+          result.secondAmount === null ? (
+            <p className="text-warning">
+              Comparison is unavailable because one or both dates
+              have no recorded water intake.
+            </p>
+          ) : (
+            <>
               <p>
                 <strong>Difference:</strong>{" "}
                 {result.difference > 0 ? "+" : ""}
@@ -124,8 +137,10 @@ function ComparePage() {
                   ? "You drank less on the second date."
                   : "Both dates have the same intake."}
               </p>
-            </div>
+            </>
           )}
+        </div>
+      )}
 
           <Link
             to="/dashboard"

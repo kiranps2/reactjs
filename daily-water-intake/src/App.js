@@ -86,7 +86,7 @@ export function Dashboard() {
     b.date.localeCompare(a.date)
   );
 
-  const recordsPerPage = 5;
+  const recordsPerPage = 2;
   const totalPages = Math.max(
     1,
     Math.ceil(sortedRecords.length / recordsPerPage)
