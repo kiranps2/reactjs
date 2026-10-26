@@ -11,12 +11,10 @@ function Login() {
   function handleLogin(e) {
     e.preventDefault();
 
-    // Get registered users
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
     const cleanEmail = email.trim().toLowerCase();
 
-    // Find a user with matching email and password
     const foundUser = users.find(
       (user) =>
         user.email === cleanEmail &&
@@ -28,7 +26,6 @@ function Login() {
       return;
     }
 
-    // Save the logged-in user's details
     const currentUser = {
       id: foundUser.id,
       name: foundUser.name,
